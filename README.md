@@ -1,5 +1,23 @@
 # Trabajo Práctico 1 – Procesamiento de Imágenes
 
+**Repositorio:** [github.com/mateoHernandez123/procesamiento-imagenes-i-tp-1](https://github.com/mateoHernandez123/procesamiento-imagenes-i-tp-1)
+
+## Requisitos
+
+- **Python** 3.9 o superior (recomendado 3.10+).
+- **pip** para instalar dependencias (`opencv-python`, `numpy`; ver `requirements.txt`).
+
+## Clonar y ejecutar en otra máquina
+
+```bash
+git clone https://github.com/mateoHernandez123/procesamiento-imagenes-i-tp-1.git
+cd procesamiento-imagenes-i-tp-1
+pip install -r requirements.txt
+python tp1_imagenes.py --sin-graficos
+```
+
+(Si `python` no funciona en Windows, probá `py tp1_imagenes.py`.)
+
 ## Cómo ejecutar
 
 1. **Instalar dependencias**
@@ -47,7 +65,7 @@ Esta sección concentra **qué se calcula** en cada paso del script: definicione
 
 ### Notación y tipo de dato
 
-- La imagen en escala de grises es una matriz **I** con **H** filas (alto) y **W** columnas (ancho). En NumPy/OpenCV: `H, W = img.shape` (orden **fila, columna**).
+- La imagen en escala de grises es una matriz **I** con **H** filas (alto) y **W** columnas (ancho). En NumPy/OpenCV el código usa `alto, ancho = img.shape` (orden **fila, columna**), equivalente a **H** y **W**.
 - Cada píxel **I(i, j)** (con **i = 0 … H−1**, **j = 0 … W−1**) es un entero en el rango de grises definido por el tipo. Lo habitual en este TP es **`uint8`**: **I(i, j) ∈ {0, 1, …, 255}** → **L = 256** niveles distintos (**8 bits** por píxel).
 - **Número total de píxeles:** **N = H · W**.
 - Si la entrada está en color, antes de analizar se obtiene un canal de luminancia en gris con `cv2.cvtColor(..., COLOR_BGR2GRAY)` (combinación lineal estándar de canales B, G, R; la implementación exacta la fija OpenCV). A partir de ahí valen las mismas cuentas sobre **I**.
@@ -125,12 +143,25 @@ En resumen: es un **cuantizador uniforme** que reduce la precisión radiométric
 
 ### Resumen de fórmulas (para copiar al informe)
 
-| Bloque | Entrada / notación | Cuenta principal |
-| ------ | ------------------ | ---------------- |
-| Píxeles | **H, W**, **N = H·W** | — |
-| Media | **x_k** intensidades | **μ = (1/N) Σ x_k** |
-| Desvío | **μ** | **σ = √((1/N) Σ (x_k − μ)²)** |
-| Histograma | **I(i,j)** | **h(g)** = píxeles con valor **g** |
-| Moda | **h(g)** | **g\* = arg max_g h(g)** |
-| Muestreo ½ | **H, W** | **D = I[::2,::2]**; salida **H×W**: **`resize(D, (W,H), NEAREST)`** |
-| Cuantif. ½ | **L = 256** | **L′ = L//2**, **Δ = 256//L′**, **Q(v) = (v//Δ)·Δ** |
+| Bloque     | Entrada / notación    | Cuenta principal                                                    |
+| ---------- | --------------------- | ------------------------------------------------------------------- |
+| Píxeles    | **H, W**, **N = H·W** | —                                                                   |
+| Media      | **x_k** intensidades  | **μ = (1/N) Σ x_k**                                                 |
+| Desvío     | **μ**                 | **σ = √((1/N) Σ (x_k − μ)²)**                                       |
+| Histograma | **I(i,j)**            | **h(g)** = píxeles con valor **g**                                  |
+| Moda       | **h(g)**              | **g\* = arg max_g h(g)**                                            |
+| Muestreo ½ | **H, W**              | **D = I[::2,::2]**; salida **H×W**: **`resize(D, (W,H), NEAREST)`** |
+| Cuantif. ½ | **L = 256**           | **L′ = L//2**, **Δ = 256//L′**, **Q(v) = (v//Δ)·Δ**                 |
+
+## Los cuatro tipos de resolución (referencia para el informe)
+
+Lo mismo que imprime el script en consola, alineado con la clase:
+
+1. **Espacial:** cantidad de píxeles (ancho × alto); cuánto detalle geométrico cabe en la grilla.
+2. **Radiométrica:** bits por píxel / niveles de gris (p. ej. 8 bits → 256 niveles); precisión tonal.
+3. **Espectral:** número de bandas; en escala de grises, **1 banda**.
+4. **Temporal:** información en el tiempo; en una **foto estática** suele indicarse **no aplica**.
+
+## Respuestas teóricas del informe
+
+En `respuestas_teoricas_informe.md` están textos guía para las preguntas del TP (muestreo vs zoom, cuantificación vs resolución radiométrica, implicancias de cambiar resolución espacial y radiométrica).
